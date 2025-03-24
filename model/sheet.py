@@ -14,7 +14,7 @@ class Sheet(Base):
         icon = Column(String(140))
         info = Column(Text, default='')
 
-        def __init__(self, name:str, level: Integer, life: Integer, ac: Integer, icon:str, info: Union[String, None]):
+        def __init__(self, name:str, level: Integer, life: Integer, ac: Integer, icon:str, info: str):
             self.id = "-".join(name.split()).lower()
             self.name = name
             self.level = level

@@ -1,14 +1,15 @@
-from pydantic import BaseModel
-from typing import Optional, Dict, Literal
+from pydantic import BaseModel, ConfigDict
+from typing import Dict, Literal
 from model.sheet import Sheet
 
 class SheetSchema(BaseModel):
+    model_config = ConfigDict(coerce_numbers_to_str=True)
     name: str = "Goblin Verde"
     level: int = 1
     life: int = 7
     ac: int = 15
     icon: str = 'folder/img.png'
-    info: Optional[str] = 'Ataque: +4 // Cimitarra: 1d6 + 2 // Velocidade: 9 metros'
+    info: str = 'Ataque: +4 // Cimitarra: 1d6 + 2 // Velocidade: 9 metros'
 
 class SheetViewSchema(BaseModel):
     name: str = "Goblin"
@@ -17,7 +18,7 @@ class SheetViewSchema(BaseModel):
     life: int = 20
     ac: int = 15    
     icon: str = 'folder/img.png'
-    info: Optional[str] = 'Ataque: +4 // Cimitarra: 1d6 + 2 // Velocidade: 9 metros'
+    info: str = 'Ataque: +4 // Cimitarra: 1d6 + 2 // Velocidade: 9 metros'
 
 class SheetDelSchema(BaseModel):
     id: str

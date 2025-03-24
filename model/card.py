@@ -11,7 +11,7 @@ class Card(Base):
     id = Column("pk_card", String(150), primary_key=True)
     index = Column(Integer)
     currLife = Column(Integer)
-    info = Column(Text, default='')
+    info = Column(String, default='')
     sheet_id = Column(
         String(150),
         ForeignKey('sheet.pk_sheet', ondelete='CASCADE'),
@@ -20,7 +20,7 @@ class Card(Base):
 
    
     def __init__(self, index:Integer, currLife: Integer, sheet_id: str, info: Union[String, None],):
-            self.id = sheet_id + str(index)
+            self.id = sheet_id + '-' + str(index)
             self.index = index
             self.currLife = currLife
             self.sheet_id = sheet_id

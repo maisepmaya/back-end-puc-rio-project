@@ -1,9 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Optional, Dict, Union, Tuple
 from model.card import Card
 from model.sheet import Sheet
 
 class CardSchema(BaseModel):
+    model_config = ConfigDict(coerce_numbers_to_str=True)
     index: int = 1
     sheet_id: str = 'goblin-verde'
 
@@ -12,7 +13,7 @@ class CardViewSchema(BaseModel):
     index: int = 0
     currLife: int = 7
     sheetId: str = "goblin-verde"
-    info: Optional[str] = 'Ataque: +4 // Cimitarra: 1d6 + 2 // Velocidade: 9 metros',
+    info: str = 'Ataque: +4 // Cimitarra: 1d6 + 2 // Velocidade: 9 metros',
     name: str = "Goblin"
     level: int = 1
     maxLife: int = 7
@@ -23,14 +24,13 @@ class ObjectCardSchema(BaseModel):
     sheets: Dict[str, CardViewSchema]
 
 class CardDelSchema(BaseModel):
-    id: str
+    id: str = 'goblin-verde-1'
 
 class CardUpdateSchema(BaseModel):
-    id: str = 'goblin-verde-0'
+    id: str = 'goblin-verde-1'
     index: int = 0
-    sheet_id: str = 'goblin-verde'
     currLife: int = 7
-    info: str = 'Ataque: +4 // Cimitarra: 1d6 + 2 // Velocidade: 9 metros',
+    info: str = "Ataque: +4 // Cimitarra: 1d6 + 2 // Velocidade: 9 metros"
 
 def display_card(card: Card, sheet: Sheet):
     return {
@@ -45,7 +45,6 @@ def display_card(card: Card, sheet: Sheet):
         "ac":  sheet.ac,
         "icon":  sheet.icon,
     }
-
 
 def display_cards(items:List[Tuple[Card, Sheet]]):
     result = {}
