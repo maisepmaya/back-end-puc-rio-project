@@ -44,7 +44,7 @@ automaticamente após uma mudança no código fonte.
 
 5. Agora basta abrir o navegador e acessar: [http://localhost:5000/#/](http://localhost:5000/#/).
 
-##⚔️ Funcionalidades
+## ⚔️ Funcionalidades
 
 #### Gerenciamento de Fichas
 
