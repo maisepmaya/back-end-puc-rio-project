@@ -3,6 +3,8 @@
 </div>
 
 # HordaMaster API
+![GitHub repo size](https://img.shields.io/github/repo-size/maisepmaya/back-end-puc-rio-project?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/maisepmaya/back-end-puc-rio-project?style=for-the-badge)
 
 A HordaMaster API foi desenvolvida em Flask para gerenciar fichas de inimigos em jogos de RPG. A API permite criar, visualizar, atualizar e excluir fichas e seus respectivos cartões de combate, facilitando a organização e controle de grandes grupos de adversários.
 
