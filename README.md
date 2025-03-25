@@ -122,7 +122,7 @@ POST /card/create
 | Parâmetro  | Tipo     | Descrição                                        |
 |------------|---------|--------------------------------------------------|
 | `sheet_id` | `string` |ID da ficha associada.        |
-| `index`    | `int`    |Índice do cartão na ficha.     |
+| `index`    | `int`    |Índice do cartão.             |
 
 **Respostas:**
 - `200 OK`: Retorna o cartão criado e detalhes da ficha associada.
@@ -170,9 +170,9 @@ PUT /card/update
 | Parâmetro  | Tipo     | Descrição                                       |
 |------------|---------|----------------------------------------------|
 | `id`      | `string` | ID do cartão a ser atualizado.  |
-| `index`   | `int`    | Novo índice do cartão (opcional).              |
-| `currLife`| `int`    | Nova vida atual do cartão (opcional).          |
-| `info`    | `string` | Novas informações sobre o cartão (opcional). |
+| `index`   | `int`    | Novo índice do cartão.              |
+| `currLife`| `int`    | Nova vida atual do cartão.          |
+| `info`    | `string` | Novas informações sobre o cartão. |
 
 **Respostas:**
 - `200 OK`: Retorna o cartão atualizado.
