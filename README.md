@@ -66,8 +66,19 @@ automaticamente após uma mudança no código fonte.
 - **Atualizar um cartão** → PUT /card/update
 - **Listar todos os cartões** → GET /card/getAll
 
+## 📂 Estrutura do Projeto
 
-## 📖 Documentação da API HordaMaster
+``` bash
+/
+├── app.py            # Arquivo principal da aplicação
+├── model/            # Modelos do banco de dados
+├── schemas/          # Definição dos esquemas de entrada/saída
+├── requirements.txt  # Lista de dependências do projeto
+└── README.md         # Documentação do projeto
+```
+
+
+# Documentação da API HordaMaster
 
 ### Criar uma nova ficha
 
@@ -196,15 +207,3 @@ GET /card/getAll
 **Respostas:**
 - `200 OK`: Lista de cartões armazenados ou objeto vazio `{}` se não houver cartões.
 - `400 Bad Request`: Erro inesperado.
-
-## 📂 Estrutura do Projeto
-
-``` bash
-/
-├── app.py            # Arquivo principal da aplicação
-├── model/            # Modelos do banco de dados
-├── schemas/          # Definição dos esquemas de entrada/saída
-├── requirements.txt  # Lista de dependências do projeto
-└── README.md         # Documentação do projeto
-```
-
