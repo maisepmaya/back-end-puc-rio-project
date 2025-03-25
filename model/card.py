@@ -19,12 +19,10 @@ class Card(Base):
     )
 
    
-    def __init__(self, index:Integer, currLife: Integer, sheet_id: str, info: Union[String, None],):
+    def __init__(self, index:int, currLife: int, sheet_id: str, info: str):
             self.id = sheet_id + '-' + str(index)
             self.index = index
             self.currLife = currLife
             self.sheet_id = sheet_id
-
-            if (info):
-                self.info = info
+            self.info = info
         

@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 import os
 
-# importando os elementos definidos no modelo
+
 from model.base import Base
 from model.sheet import Sheet
 from model.card import Card

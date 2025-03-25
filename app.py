@@ -215,9 +215,9 @@ def del_card_all():
 
     try:
         session = Session()
-        session.query(Card).delete()
+        count = session.query(Card).delete()
         session.commit()
-        return {"message": "Cartões removidos."}
+        return {"message": "Cartões removidos.", "count": count}
     except Exception as e:
         error_msg = "Parece que ocorreu um erro."
         return {"message": error_msg}, 400
