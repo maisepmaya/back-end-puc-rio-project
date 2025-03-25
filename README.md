@@ -41,39 +41,19 @@ automaticamente após uma mudança no código fonte.
 5. Agora basta abrir o navegador e acessar: [http://localhost:5000/#/](http://localhost:5000/#/).
 ## Funcionalidades
 
--  **Criação de Fichas de Inimigos**: Permite a inserção de informações detalhadas sobre cada tipo de inimigo, como nome, nível, pontos de vida e descrições personalizadas.
-
-- **Adição ao Grid de Combate:** Facilita a inserção de múltiplas cópias de inimigos no grid, com numeração automática para identificação individual.
-
--  **Edição em Tempo Real**: Possibilita a modificação dos pontos de vida e outras informações relevantes diretamente na interface durante as sessões de jogo.
-
-
-## Estrutura do Projeto
-
-``` bash
-/
-├── app.py            # Arquivo principal da aplicação
-├── model/            # Modelos do banco de dados
-├── schemas/          # Definição dos esquemas de entrada/saída
-├── requirements.txt  # Lista de dependências do projeto
-└── README.md         # Documentação do projeto
-```
-## Funcionalidades
-
 #### Gerenciamento de Fichas
 
-- Criar uma nova ficha → POST /sheet/create
-- Remover uma ficha → DELETE /sheet/delete
-- Listar todas as fichas → GET /sheet/getAll
+- **Criar uma nova ficha** → POST /sheet/create
+- **Remover uma ficha** → DELETE /sheet/delete
+- **Listar todas as fichas** → GET /sheet/getAll
 
 
 #### Gerenciamento de Cartões
-- Criar um novo cartão → POST /card/create
-- Remover um cartão → DELETE /card/delete
-- Remover todos os cartões → DELETE /card/deleteAll
-- Atualizar um cartão → PUT /card/update
-- Listar todos os cartões → GET /card/getAll
-
+- **Criar um novo cartão** → POST /card/create
+- **Remover um cartão** → DELETE /card/delete
+- **Remover todos os cartões** → DELETE /card/deleteAll
+- **Atualizar um cartão** → PUT /card/update
+- **Listar todos os cartões** → GET /card/getAll
 
 
 ## Documentação da API HordaMaster
@@ -207,9 +187,17 @@ GET /card/getAll
 - `400 Bad Request`: Erro inesperado.
 
 
+## Estrutura do Projeto
+
+``` bash
+/
+├── app.py            # Arquivo principal da aplicação
+├── model/            # Modelos do banco de dados
+├── schemas/          # Definição dos esquemas de entrada/saída
+├── requirements.txt  # Lista de dependências do projeto
+└── README.md         # Documentação do projeto
+```
 ## Propósito
 Este projeto faz parte da minha pós-graduação em desenvolvimento full-stack e foi criado com o objetivo de aprimorar habilidades práticas em backend, além de oferecer uma solução útil para a comunidade de RPG.
 
 Para a interface visual e gerenciamento dos dados no frontend, confira o repositório do [HordaMaster](https://github.com/maisepmaya/front-end-puc-rio-project.git).
-
-
