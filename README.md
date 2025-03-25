@@ -47,4 +47,5 @@ Agora basta abrir o arquivo index.html no seu browser.
 └── README.md       # Documentação do projeto
 ```
 ## Propósito
-Este projeto faz parte da minha pós-graduação em desenvolvimento full-stack e foi criado com o objetivo de aprimorar habilidades práticas em frontend e backend, além de oferecer uma solução útil para a comunidade de RPG.
+Este projeto faz parte da minha pós-graduação em desenvolvimento full-stack e foi criado com o objetivo de aprimorar habilidades práticas em frontend, além de oferecer uma solução útil para a comunidade de RPG. 
+Para a API que gerencia os dados no backend, confira o repositório do [HordaMaster API](https://github.com/maisepmaya/back-end-puc-rio-project.git).    
