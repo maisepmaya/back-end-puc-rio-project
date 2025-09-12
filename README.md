@@ -3,15 +3,14 @@
 </div>
 
 # HordaMaster API
+
 ![GitHub repo size](https://img.shields.io/github/repo-size/maisepmaya/back-end-puc-rio-project?style=for-the-badge)
 ![GitHub language count](https://img.shields.io/github/languages/count/maisepmaya/back-end-puc-rio-project?style=for-the-badge)
 
-A HordaMaster API foi desenvolvida em Flask para gerenciar fichas de inimigos em jogos de RPG. A API permite criar, visualizar, atualizar e excluir fichas e seus respectivos cartões de combate, facilitando a organização e controle de grandes grupos de adversários.
+A **HordaMaster API** foi desenvolvida em **Flask** para gerenciar fichas e cartões de inimigos em jogos de RPG.  
+Ela permite **criar, visualizar, atualizar e excluir** fichas de monstros, organizando grandes grupos de adversários de forma prática.
 
-## 🎯 Propósito
-Este projeto faz parte da minha pós-graduação em desenvolvimento full-stack e foi criado com o objetivo de aprimorar habilidades práticas em backend, além de oferecer uma solução útil para a comunidade de RPG.
-
-Para a interface visual e gerenciamento dos dados no frontend, confira o repositório do [HordaMaster](https://github.com/maisepmaya/front-end-puc-rio-project.git).
+🔗 Para a interface visual e gerenciamento no **frontend**, confira o repositório do [HordaMaster Frontend](https://github.com/maisepmaya/front-end-puc-rio-project.git).
 
 ## 🚀 Tecnologias utilizada
 
@@ -21,66 +20,35 @@ Para a interface visual e gerenciamento dos dados no frontend, confira o reposit
 
 ## 🚀 Instalação e Execução
 
-Siga os passos abaixo para configurar e executar a API em seu ambiente local.
-
-**1. Clone o Repositório**
 ```bash
+# Clone o repositório
 git clone https://github.com/maisepmaya/back-end-puc-rio-project.git
 cd back-end-puc-rio-project
-```
 
-**2. Crie e Ative um Ambiente Virtual**
-É uma boa prática usar um ambiente virtual para isolar as dependências do projeto.
-```bash
-# Crie o ambiente virtual (substitua 'venv' pelo nome que preferir)
+# Crie e ative o ambiente virtual
 python -m venv venv
+source venv/bin/activate   # Linux/macOS
+venv\Scripts\activate      # Windows
 
-# Ative o ambiente
-# Windows
-venv\Scripts\activate
-# macOS/Linux
-source venv/bin/activate
-```
-
-**3. Instale as Dependências**
-```bash
+# Instale as dependências
 pip install -r requirements.txt
-```
 
-**4. Execute a Aplicação**
-Ao iniciar a aplicação pela primeira vez, o banco de dados SQLite (`db.sqlite3`) e suas tabelas serão criados automaticamente no diretório `database/`.
-
-Para rodar o servidor em modo de desenvolvimento (com recarregamento automático):
-```bash
+# Execute em modo desenvolvimento
 flask run --host 0.0.0.0 --port 5000 --reload
-```
 
-Para rodar em modo de produção:
-```bash
+# Ou em modo de produção
 flask run --host 0.0.0.0 --port 5000
 ```
 
-**5. Acesse a Documentação da API**
-Com o servidor em execução, a documentação interativa (Swagger UI) estará disponível em:
-[http://localhost:5000/](http://localhost:5000/)
-
 ## 🐳 Executando com Docker
 
-Como alternativa à execução local, você pode usar o Docker para rodar a aplicação em um contêiner. Certifique-se de que o Docker esteja instalado e em execução em sua máquina.
-
-1. **Construa a imagem Docker:**
-Este comando cria uma imagem chamada `hordamaster-api` a partir do `Dockerfile`.
 ```bash
+# Construa a imagem
 docker build -t hordamaster-api .
-```
 
-2. **Execute o contêiner:**
-Este comando inicia o contêiner em modo "detached" (`-d`) e mapeia a porta 5000 do seu computador para a porta 5000 do contêiner.
-```bash
+# Execute o container
 docker run -d -p 5000:5000 hordamaster-api
 ```
-Após executar o segundo comando, a API estará rodando em segundo plano e acessível em `http://localhost:5000`.
-
 
 ## ⚔️ Funcionalidades
 
@@ -89,7 +57,6 @@ Após executar o segundo comando, a API estará rodando em segundo plano e acess
 - **Criar uma nova ficha** → POST /sheet/create
 - **Remover uma ficha** → DELETE /sheet/delete
 - **Listar todas as fichas** → GET /sheet/getAll
-
 
 #### Gerenciamento de Cartões
 - **Criar um novo cartão** → POST /card/create
@@ -109,6 +76,7 @@ Após executar o segundo comando, a API estará rodando em segundo plano e acess
 └── README.md         # Documentação do projeto
 ```
 
+---
 
 # Documentação da API HordaMaster
 
@@ -117,7 +85,6 @@ A documentação completa e interativa da API está disponível via Swagger UI. 
 
 Abaixo está um resumo dos endpoints, parâmetros e respostas esperadas.
 
----
 
 ## Fichas (`/sheet`)
 
@@ -146,8 +113,6 @@ POST /sheet/create
 - **`409 Conflict`**: Uma ficha com o mesmo nome já existe.
 - **`400 Bad Request`**: Erro de validação ou erro inesperado.
 
----
-
 ### Remover uma ficha
 
 Remove uma ficha e todos os seus cartões associados.
@@ -165,8 +130,6 @@ DELETE /sheet/delete?id={sheet_id}
 - **`200 OK`**: Confirma a remoção.
 - **`404 Not Found`**: Ficha não encontrada.
 
----
-
 ### Listar todas as fichas
 
 Retorna as fichas, com um filtro opcional por tipo.
@@ -183,8 +146,6 @@ GET /sheet/getAll?type={sheet_type}
 **Respostas:**
 - **`200 OK`**: Retorna um objeto contendo as fichas (`ObjectSheetsSchema`).
 - **`400 Bad Request`**: Erro inesperado.
-
----
 
 ## Cartões (`/card`)
 
@@ -226,8 +187,6 @@ POST /card/create
 - **`404 Not Found`**: A ficha (com o `id` informado) não foi encontrada.
 - **`400 Bad Request`**: Erro de validação ou erro inesperado.
 
----
-
 ### Remover um cartão
 
 Remove um cartão específico. Se o cartão estiver associado a uma ficha do tipo `dependent`, a ficha também será removida.
@@ -246,7 +205,6 @@ DELETE /card/delete?id={card_id}
 - **`404 Not Found`**: Cartão não encontrado.
 - **`400 Bad Request`**: Erro inesperado.
 
----
 
 ### Remover todos os cartões
 
@@ -259,8 +217,6 @@ DELETE /card/deleteAll
 **Respostas:**
 - **`200 OK`**: Confirma a remoção em massa.
 - **`400 Bad Request`**: Erro inesperado.
-
----
 
 ### Atualizar um cartão
 
@@ -285,8 +241,6 @@ PUT /card/update
 - **`404 Not Found`**: Cartão não encontrado.
 - **`400 Bad Request`**: Erro de validação ou erro inesperado.
 
----
-
 ### Listar todos os cartões
 
 Retorna todos os cartões de combate ativos.
@@ -298,3 +252,8 @@ GET /card/getAll
 **Respostas:**
 - **`200 OK`**: Retorna um objeto contendo os cartões (`ObjectCardSchema`).
 - **`400 Bad Request`**: Erro inesperado.
+
+
+##
+
+Projeto da **Pós-Graduação em Desenvolvimento Full-Stack** - **PUC-Rio**.
