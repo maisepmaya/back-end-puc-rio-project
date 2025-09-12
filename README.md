@@ -73,6 +73,7 @@ docker run -d -p 5000:5000 hordamaster-api
 ├── model/            # Modelos do banco de dados
 ├── schemas/          # Definição dos esquemas de entrada/saída
 ├── requirements.txt  # Lista de dependências do projeto
+├── Dockerfile        # Arquivo do Docker
 └── README.md         # Documentação do projeto
 ```
 
