@@ -42,7 +42,8 @@ def add_sheet(form: SheetSchema):
         life = form.life,
         ac = form.ac,
         info = form.info,
-        icon = form.icon
+        icon = form.icon,
+        type = "independent"
         )
 
 
@@ -53,8 +54,7 @@ def add_sheet(form: SheetSchema):
         return display_sheet(sheet), 200
 
     except IntegrityError as e:
-        # como a duplicidade do nome é a provável razão do IntegrityError
-        error_msg = "Ficha com mesmo nome já cadastrado, {sheet.name}"
+        error_msg = f"Erro ao criar ficha: {str(e)}"
         return {"message": error_msg}, 409
 
     except Exception as e:
@@ -92,7 +92,7 @@ def del_sheet(query: SheetDelSchema):
 
 @app.get('/sheet/getAll', tags=[sheet_tag],
          responses={"200": ObjectSheetsSchema, "400": ErrorSchema})
-def get_sheets():
+def get_sheets(query: SheetSearchSchema):
     """Retorna todas as fichas armazenadas na base de dados.
 
     - **200**: Lista de fichas encontradas ou um objeto vazio caso não existam fichas.
@@ -100,7 +100,10 @@ def get_sheets():
     session = Session()
 
     try:
-        sheets = session.query(Sheet).all()
+        if query.type:
+            sheets = session.query(Sheet).filter(Sheet.type == query.type).all()
+        else:
+            sheets = session.query(Sheet).all()
         session.close()
 
         if not sheets:
@@ -116,43 +119,61 @@ def get_sheets():
 
 # Cartões  -------------------------------------------
 @app.post('/card/create', tags=[card_tag],
-          responses={"200": CardViewSchema, "409": ErrorSchema, "400": ErrorSchema})
+          responses={"200": CardViewSchema, "409": ErrorSchema, "400": ErrorSchema, "404": ErrorSchema})
 def add_card(form: CardSchema):
-    """Cria um novo cartão associado a uma ficha existente.
+    """Cria um novo cartão, podendo ser:
+
+    - A partir de um `sheet_id` já existente.
+    - A partir de um objeto `sheet` enviado no corpo.
 
     - **200**: Retorna o cartão criado e os detalhes da ficha associada.
     - **404**: Ficha para cadastro não encontrada.
     - **409**: Cartão já existente.
     - **400**: Erro inesperado.
     """
-    
     try:
-        sheet_id  = form.sheet_id
         session = Session()
+        sheet_id = None
 
-        sheet = session.query(Sheet).filter(Sheet.id == sheet_id).first()
-
-        if not sheet:
-            error_msg = "Ficha não encontrada para criação de cartão"
-            return {"mesage": error_msg}, 404
-
-        card = Card(
-            index= form.index,
-            currLife= sheet.life,
-            sheet_id= form.sheet_id,
-            info= sheet.info,
+        if isinstance(form.sheet, str):
+            sheet_id = form.sheet
+            sheet = session.query(Sheet).filter(Sheet.id == sheet_id).first()
+            if not sheet:
+                return {"message": "Ficha não encontrada para criação de cartão"}, 404
+        else:
+            sheet_data = form.sheet
+            sheet = Sheet(
+                name=sheet_data.name,
+                level=sheet_data.level,
+                life=sheet_data.life,
+                ac=sheet_data.ac,
+                info=sheet_data.info,
+                icon=sheet_data.icon,
+                type='dependent'
             )
-    
+            session.add(sheet)
+            session.commit()
+            sheet_id = sheet.id
+
+        # Criar o card
+        card = Card(
+            index=form.index,
+            currLife=sheet.life,
+            sheet_id=sheet_id,
+            info=sheet.info,
+        )
+
         session.add(card)
         session.commit()
         return display_card(card, sheet), 200
+
     except Exception as e:
-        # caso um erro fora do previsto
-        error_msg = "Parece que ocorreu um erro."
+        error_msg = f"Parece que ocorreu um erro: {str(e)}"
         return {"message": error_msg}, 400
     finally:
         session.close()
 
+        
 @app.get('/card/getAll', tags=[card_tag],
          responses={"200": ObjectCardSchema, "400": ErrorSchema})
 def get_cards():
@@ -190,14 +211,23 @@ def del_card(query: CardDelSchema):
         card_id = unquote(unquote(query.id))
 
         session = Session()
-        count = session.query(Card).filter(Card.id == card_id).delete()
-        session.commit()
+        card = session.query(Card).filter(Card.id == card_id).first()
 
-        if count:
-            return {"message": "Cartão removido", "id": card_id}
-        else:
+        if not card:
             error_msg = "Cartão não encontrado na base"
             return {"message": error_msg}, 404
+
+        sheet = session.query(Sheet).filter(Sheet.id == card.sheet_id).first()
+
+        session.delete(card)
+        session.commit()
+
+        if sheet.type == 'dependent':
+            session.delete(sheet)
+            session.commit()
+
+        return {"message": "Cartão removido", "id": card_id}
+
     except Exception as e:
         error_msg = "Parece que ocorreu um erro."
         return {"message": error_msg}, 400
@@ -215,9 +245,10 @@ def del_card_all():
 
     try:
         session = Session()
-        count = session.query(Card).delete()
+        session.query(Card).delete()
+        session.query(Sheet).filter(Sheet.type == 'dependent').delete()
         session.commit()
-        return {"message": "Cartões removidos.", "count": count}
+        return {"message": "Cartões e fichas dependentes removidos."}
     except Exception as e:
         error_msg = "Parece que ocorreu um erro."
         return {"message": error_msg}, 400

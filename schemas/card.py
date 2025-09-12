@@ -3,10 +3,41 @@ from typing import List, Optional, Dict, Union, Tuple
 from model.card import Card
 from model.sheet import Sheet
 
+from schemas.sheet import SheetSchema
+
 class CardSchema(BaseModel):
-    model_config = ConfigDict(coerce_numbers_to_str=True)
+    model_config = ConfigDict(
+        coerce_numbers_to_str=True,
+        json_schema_extra={
+            "examples": [
+                {
+                    "index": 1,
+                    "sheet": "goblin-verde"
+                },
+                {
+                    "index": 1,
+                    "sheet": {
+                        "name": "Orc",
+                        "level": 2,
+                        "life": 15,
+                        "ac": 13,
+                        "icon": "folder/orc.png",
+                        "info": "Ataque: +5 // Machado Grande: 1d12 + 3"
+                    }
+                }
+            ]
+        }
+    )
     index: int = 1
-    sheet_id: str = 'goblin-verde'
+    sheet: Union[SheetSchema, str] = {
+        "ac": 15,
+        "icon": "folder/img.png",
+        "id": "goblin-verde",
+        "info": "Ataque: +4 // Cimitarra: 1d6 + 2 // Velocidade: 9 metros",
+        "level": 1,
+        "life": 20,
+        "name": "Goblin"
+    }
 
 class CardViewSchema(BaseModel):
     id: str = 'goblin-verde-0'

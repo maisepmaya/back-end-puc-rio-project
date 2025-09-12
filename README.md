@@ -19,36 +19,68 @@ Para a interface visual e gerenciamento dos dados no frontend, confira o reposit
 - SQLite
 - Flask
 
-## 🔧 Como executar
+## 🚀 Instalação e Execução
 
-1. Clone o projeto:
-```
-  git clone https://github.com/maisepmaya/back-end-puc-rio-project.git
-```
+Siga os passos abaixo para configurar e executar a API em seu ambiente local.
 
-2. Após clonar o repositório, é necessário ir ao diretório raiz, pelo terminal, para poder executar os comandos descritos abaixo.
-> É fortemente indicado o uso de ambientes virtuais do tipo [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html).
-
-
-3. Instale as as dependências/bibliotecas descritas no arquivo requirements.txt:
-```
-(env)$ pip install -r requirements.txt
+**1. Clone o Repositório**
+```bash
+git clone https://github.com/maisepmaya/back-end-puc-rio-project.git
+cd back-end-puc-rio-project
 ```
 
-4. Para executar a API, rode o projeto com o flask:
+**2. Crie e Ative um Ambiente Virtual**
+É uma boa prática usar um ambiente virtual para isolar as dependências do projeto.
+```bash
+# Crie o ambiente virtual (substitua 'venv' pelo nome que preferir)
+python -m venv venv
 
-```
-(env)$ flask run --host 0.0.0.0 --port 5000
-```
-
-Em modo de desenvolvimento é recomendado executar utilizando o parâmetro reload, que reiniciará o servidor
-automaticamente após uma mudança no código fonte. 
-
-```
-(env)$ flask run --host 0.0.0.0 --port 5000 --reload
+# Ative o ambiente
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
 ```
 
-5. Agora basta abrir o navegador e acessar: [http://localhost:5000/#/](http://localhost:5000/#/).
+**3. Instale as Dependências**
+```bash
+pip install -r requirements.txt
+```
+
+**4. Execute a Aplicação**
+Ao iniciar a aplicação pela primeira vez, o banco de dados SQLite (`db.sqlite3`) e suas tabelas serão criados automaticamente no diretório `database/`.
+
+Para rodar o servidor em modo de desenvolvimento (com recarregamento automático):
+```bash
+flask run --host 0.0.0.0 --port 5000 --reload
+```
+
+Para rodar em modo de produção:
+```bash
+flask run --host 0.0.0.0 --port 5000
+```
+
+**5. Acesse a Documentação da API**
+Com o servidor em execução, a documentação interativa (Swagger UI) estará disponível em:
+[http://localhost:5000/](http://localhost:5000/)
+
+## 🐳 Executando com Docker
+
+Como alternativa à execução local, você pode usar o Docker para rodar a aplicação em um contêiner. Certifique-se de que o Docker esteja instalado e em execução em sua máquina.
+
+1. **Construa a imagem Docker:**
+Este comando cria uma imagem chamada `hordamaster-api` a partir do `Dockerfile`.
+```bash
+docker build -t hordamaster-api .
+```
+
+2. **Execute o contêiner:**
+Este comando inicia o contêiner em modo "detached" (`-d`) e mapeia a porta 5000 do seu computador para a porta 5000 do contêiner.
+```bash
+docker run -d -p 5000:5000 hordamaster-api
+```
+Após executar o segundo comando, a API estará rodando em segundo plano e acessível em `http://localhost:5000`.
+
 
 ## ⚔️ Funcionalidades
 
@@ -80,130 +112,189 @@ automaticamente após uma mudança no código fonte.
 
 # Documentação da API HordaMaster
 
+A documentação completa e interativa da API está disponível via Swagger UI. Com o servidor em execução, acesse:
+[http://localhost:5000/](http://localhost:5000/)
+
+Abaixo está um resumo dos endpoints, parâmetros e respostas esperadas.
+
+---
+
+## Fichas (`/sheet`)
+
 ### Criar uma nova ficha
+
+Cria uma nova ficha de inimigo.
 
 ```http
 POST /sheet/create
 ```
 
-| Parâmetro  | Tipo     | Descrição                                         |
-|------------|---------|-----------------------------------------------------|
-| `name`     | `string` | Nome da ficha (único).           |
-| `level`    | `int`    | Nível do inimigo.                 |
-| `life`     | `int`    | Pontos de vida da ficha.         |
-| `ac`       | `int`    | Classe de armadura da ficha.     |
-| `icon`     | `string` | URL do ícone da ficha.                 |
-| `info`     | `string` |Informações adicionais sobre a ficha. |
+**Corpo da Requisição (`application/json`):**
+```json
+{
+  "name": "Goblin Lançador",
+  "level": 1,
+  "life": 7,
+  "ac": 15,
+  "icon": "path/to/icon.png",
+  "info": "Ataque: +4, Dardo: 1d4+2"
+}
+```
 
 **Respostas:**
-- `200 OK`: Retorna a ficha criada.
-- `409 Conflict`: Nome da ficha já cadastrado.
-- `400 Bad Request`: Erro inesperado.
+- **`200 OK`**: Retorna a ficha criada (`SheetViewSchema`).
+- **`409 Conflict`**: Uma ficha com o mesmo nome já existe.
+- **`400 Bad Request`**: Erro de validação ou erro inesperado.
 
 ---
 
 ### Remover uma ficha
 
+Remove uma ficha e todos os seus cartões associados.
+
 ```http
-DELETE /sheet/delete
+DELETE /sheet/delete?id={sheet_id}
 ```
 
-| Parâmetro | Tipo     | Descrição                                  |
-|-----------|---------|--------------------------------|
-| `id`     | `string` | ID da ficha a ser removida. |
+**Parâmetros da Query:**
+| Parâmetro | Tipo     | Descrição                  |
+|-----------|----------|------------------------------|
+| `id`      | `string` | **Obrigatório.** ID da ficha a ser removida. |
 
 **Respostas:**
-- `200 OK`: Confirma a remoção da ficha e seus cartões.
-- `404 Not Found`: Ficha não encontrada.
+- **`200 OK`**: Confirma a remoção.
+- **`404 Not Found`**: Ficha não encontrada.
 
 ---
 
-### Retornar todas as fichas
+### Listar todas as fichas
+
+Retorna as fichas, com um filtro opcional por tipo.
 
 ```http
-GET /sheet/getAll
+GET /sheet/getAll?type={sheet_type}
 ```
 
+**Parâmetros da Query:**
+| Parâmetro | Tipo     | Descrição                               |
+|-----------|----------|-------------------------------------------|
+| `type`    | `string` | Opcional. Filtra por tipo: `independent` ou `dependent`. |
+
 **Respostas:**
-- `200 OK`: Lista de fichas armazenadas ou objeto vazio `{}` se não houver fichas.
-- `400 Bad Request`: Erro inesperado.
+- **`200 OK`**: Retorna um objeto contendo as fichas (`ObjectSheetsSchema`).
+- **`400 Bad Request`**: Erro inesperado.
 
 ---
+
+## Cartões (`/card`)
 
 ### Criar um novo cartão
+
+Cria um novo cartão de combate. O cartão pode ser criado a partir de uma ficha existente (passando o `id` da ficha) ou criando uma nova ficha "dependente" (passando um objeto de ficha completo).
 
 ```http
 POST /card/create
 ```
 
-| Parâmetro  | Tipo     | Descrição                                        |
-|------------|---------|--------------------------------------------------|
-| `sheet_id` | `string` |ID da ficha associada.        |
-| `index`    | `int`    |Índice do cartão.             |
+**Corpo da Requisição (`application/json`):**
+
+*Exemplo 1: A partir de uma ficha existente*
+```json
+{
+  "index": 1,
+  "sheet": "id-da-ficha-existente"
+}
+```
+
+*Exemplo 2: Criando uma ficha dependente*
+```json
+{
+  "index": 2,
+  "sheet": {
+    "name": "Orc Chefe",
+    "level": 3,
+    "life": 30,
+    "ac": 16,
+    "icon": "path/to/orc-chefe.png",
+    "info": "Grito de Guerra: Aliados ganham +1 de ataque."
+  }
+}
+```
 
 **Respostas:**
-- `200 OK`: Retorna o cartão criado e detalhes da ficha associada.
-- `404 Not Found`: Ficha não encontrada.
-- `409 Conflict`: Cartão já existente.
-- `400 Bad Request`: Erro inesperado.
+- **`200 OK`**: Retorna o cartão criado (`CardViewSchema`).
+- **`404 Not Found`**: A ficha (com o `id` informado) não foi encontrada.
+- **`400 Bad Request`**: Erro de validação ou erro inesperado.
 
 ---
 
 ### Remover um cartão
 
+Remove um cartão específico. Se o cartão estiver associado a uma ficha do tipo `dependent`, a ficha também será removida.
+
 ```http
-DELETE /card/delete
+DELETE /card/delete?id={card_id}
 ```
 
-| Parâmetro | Tipo     | Descrição                                  |
-|-----------|---------|--------------------------------|
-| `id`     | `string` | ID do cartão a ser removido. |
+**Parâmetros da Query:**
+| Parâmetro | Tipo     | Descrição                  |
+|-----------|----------|------------------------------|
+| `id`      | `string` | **Obrigatório.** ID do cartão a ser removido. |
 
 **Respostas:**
-- `200 OK`: Confirma a remoção do cartão.
-- `404 Not Found`: Cartão não encontrado.
-- `400 Bad Request`: Erro inesperado.
+- **`200 OK`**: Confirma a remoção.
+- **`404 Not Found`**: Cartão não encontrado.
+- **`400 Bad Request`**: Erro inesperado.
 
 ---
 
 ### Remover todos os cartões
+
+Remove todos os cartões e todas as fichas do tipo `dependent`.
 
 ```http
 DELETE /card/deleteAll
 ```
 
 **Respostas:**
-- `200 OK`: Confirma a remoção de todos os cartões.
-- `400 Bad Request`: Erro inesperado.
+- **`200 OK`**: Confirma a remoção em massa.
+- **`400 Bad Request`**: Erro inesperado.
 
 ---
 
 ### Atualizar um cartão
 
+Atualiza os dados de um cartão, como seu índice, vida atual ou informações.
+
 ```http
 PUT /card/update
 ```
 
-| Parâmetro  | Tipo     | Descrição                                       |
-|------------|---------|----------------------------------------------|
-| `id`      | `string` | ID do cartão a ser atualizado.  |
-| `index`   | `int`    | Novo índice do cartão.              |
-| `currLife`| `int`    | Nova vida atual do cartão.          |
-| `info`    | `string` | Novas informações sobre o cartão. |
+**Corpo da Requisição (`application/json`):**
+```json
+{
+  "id": "id-do-cartao-existente",
+  "index": 5,
+  "currLife": 12,
+  "info": "Envenenado (2 turnos)"
+}
+```
 
 **Respostas:**
-- `200 OK`: Retorna o cartão atualizado.
-- `404 Not Found`: Cartão não encontrado.
-- `400 Bad Request`: Erro inesperado.
+- **`200 OK`**: Retorna o cartão atualizado (`CardViewSchema`).
+- **`404 Not Found`**: Cartão não encontrado.
+- **`400 Bad Request`**: Erro de validação ou erro inesperado.
 
 ---
 
-### Retornar todos os cartões
+### Listar todos os cartões
+
+Retorna todos os cartões de combate ativos.
 
 ```http
 GET /card/getAll
 ```
 
 **Respostas:**
-- `200 OK`: Lista de cartões armazenados ou objeto vazio `{}` se não houver cartões.
-- `400 Bad Request`: Erro inesperado.
+- **`200 OK`**: Retorna um objeto contendo os cartões (`ObjectCardSchema`).
+- **`400 Bad Request`**: Erro inesperado.
