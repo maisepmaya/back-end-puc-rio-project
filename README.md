@@ -18,7 +18,7 @@ Ela permite **criar, visualizar, atualizar e excluir** fichas de monstros, organ
 - SQLite
 - Flask
 
-## 🚀 Instalação e Execução
+## 📥 Instalação e Execução
 
 ```bash
 # Clone o repositório
@@ -254,6 +254,6 @@ GET /card/getAll
 - **`400 Bad Request`**: Erro inesperado.
 
 
-##
+#
 
-Projeto da **Pós-Graduação em Desenvolvimento Full-Stack** - **PUC-Rio**.
+📜 Projeto da **Pós-Graduação em Desenvolvimento Full-Stack** - **PUC-Rio**.
