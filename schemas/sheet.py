@@ -5,7 +5,7 @@ from model.sheet import Sheet
 class SheetSchema(BaseModel):
     model_config = ConfigDict(coerce_numbers_to_str=True)
     name: str = "Goblin Verde"
-    level: int = 1
+    level: float = 1.0
     life: int = 7
     ac: int = 15
     icon: str = 'folder/img.png'
@@ -14,7 +14,7 @@ class SheetSchema(BaseModel):
 class SheetViewSchema(BaseModel):
     name: str = "Goblin"
     id: str = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-    level: int = 1
+    level: float = 1.0
     life: int = 20
     ac: int = 15    
     icon: str = 'folder/img.png'
